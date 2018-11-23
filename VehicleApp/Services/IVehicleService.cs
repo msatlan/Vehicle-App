@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using VehicleApp.Models;
+
+namespace VehicleApp.Services
+{
+    public interface IVehicleService
+    {
+        Task<VehicleMake[]> GetVehicleMakesAsync();
+        Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake);
+    }
+}

@@ -8,9 +8,9 @@ namespace VehicleApp.Models
 {
     public class VehicleMake
     {
-        public int VehicleMakeId { get; set; }
+        public Guid VehicleMakeId { get; set; }
 
-        [RegularExpression(@"^[A-Z]+[a-zA-Z0-9'\s-]*$"), Required, StringLength(20)]
+        [Required, StringLength(20)]
         public string Name { get; set; }
 
         [StringLength(10)]

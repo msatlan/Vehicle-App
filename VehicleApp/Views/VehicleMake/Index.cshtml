@@ -1,0 +1,40 @@
+﻿@model VehicleApp.Models.VehicleMakeViewModels.IndexViewModel
+
+@{ 
+    ViewData["Title"] = "Manage Vehicle Makes";
+}
+
+<h2>Vehicle Makes</h2>
+
+<p>
+    <a asp-action="Create">Add new vehicle make</a>
+</p>
+
+<div class="panel panel-default vehicle-panel">
+    <div class="panel-heading">@ViewData["Title"]</div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Abbreviation</th>
+            </tr>
+        </thead>
+
+
+        @foreach (var vehicleMake in Model.VehicleMakes)
+        {
+            <tr>
+                <td>@vehicleMake.Name</td>
+                <td>@vehicleMake.Abrv</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@vehicleMake.VehicleMakeId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@vehicleMake.VehicleMakeId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@vehicleMake.VehicleMakeId">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+    </div>
+
+  

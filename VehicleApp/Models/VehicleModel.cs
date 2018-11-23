@@ -8,7 +8,7 @@ namespace VehicleApp.Models
 {
     public class VehicleModel
     {
-        public int VehicleModelId { get; set; }
+        public Guid VehicleModelId { get; set; }
 
         [Required, StringLength(20)]
         public string Name { get; set; }
@@ -17,7 +17,8 @@ namespace VehicleApp.Models
         public string Abrv { get; set; }
 
         // Foreign key
-        public int VehicleMakeID { get; set; }
+        [Required]
+        public Guid VehicleMakeId { get; set; }
 
         // Navigation property
         public VehicleMake VehicleMake { get; set; }

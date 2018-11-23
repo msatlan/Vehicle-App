@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 // added
 using VehicleApp.Data;
 using Microsoft.EntityFrameworkCore;
+using VehicleApp.Services;
 
 namespace VehicleApp
 {
@@ -37,7 +38,9 @@ namespace VehicleApp
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<VehicleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleDb")));
+            services.AddDbContext<VehicleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleDb10")));
+
+            services.AddScoped<IVehicleService, VehicleService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
