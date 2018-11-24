@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using VehicleApp.Services;
 using VehicleApp.Models.VehicleMakeViewModels;
 using VehicleApp.Models;
-
+using System.Diagnostics;
 
 namespace VehicleApp.Controllers
 {
     public class VehicleMakeController : Controller
     {
+        // Properties
         private readonly IVehicleService vehicleService;
 
-        public  VehicleMakeController(IVehicleService vehicleService)
+        // Constructor
+        public VehicleMakeController(IVehicleService vehicleService)
         {
             this.vehicleService = vehicleService;
         }
 
+        // Fetch array of Vehicle Makes
         public async Task<IActionResult> Index()
         {
             var vehicleMakes = await vehicleService.GetVehicleMakesAsync();
@@ -30,11 +33,13 @@ namespace VehicleApp.Controllers
             return View(viewModel);
         }
 
+        // Navigate to Create page
         public IActionResult Create()
         {
             return View();
         }
 
+        // Add new Vehicle Make
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddNewVehicleMake(VehicleMake newVehicleMake)
         {
@@ -42,7 +47,31 @@ namespace VehicleApp.Controllers
 
             var success = await vehicleService.AddNewVehicleMakeAsync(newVehicleMake);
             if (!success) return BadRequest("Could not add new vehicle make");
-           
+
+            return RedirectToAction("Index");
+        }
+
+        // Navigate to Delete page and display selected vehicle
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            if (id == null) return NotFound();
+
+            var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
+
+            if (vehicleMake == null) return NotFound();
+
+            var viewModel = new DeleteViewModel() { VehicleMakeToDelete = vehicleMake };
+
+            return View(viewModel);
+        }
+
+        // Delete selected Vehicle Make
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> DeleteVehicleMake(Guid id)
+        {
+            var success = await vehicleService.DeleteVehicleMakeAsync(id);
+            if (!success) return BadRequest("Could not delete Vehicle Make.");
+
             return RedirectToAction("Index");
         }
     }

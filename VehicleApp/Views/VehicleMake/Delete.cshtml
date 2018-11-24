@@ -1,0 +1,33 @@
+﻿@model VehicleApp.Models.VehicleMakeViewModels.DeleteViewModel
+
+@{ 
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this Vehicle Make?</h3>
+
+<h5>Warning: All pertaining Vehicle Models will be permanently deleted!</h5>
+
+<div>
+    <h4>Vehicle Make</h4>
+
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.Name)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.Abrv)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.Abrv)</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.VehicleModels)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.VehicleModels)</dd>
+    </dl>
+
+    <form asp-action="DeleteVehicleMake">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+
