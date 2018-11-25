@@ -1,0 +1,37 @@
+﻿@model VehicleApp.Models.VehicleMakeViewModels.EditViewModel
+
+@{ 
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Vehicle Make</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="UpdateVehicleMake" asp-controller="VehicleMake">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="VehicleMakeToEdit.Name" class="control-label"></label>
+                <input asp-for="VehicleMakeToEdit.Name" class="form-control" />
+                <span asp-validation-for="VehicleMakeToEdit.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleMakeToEdit.Abrv" class="control-label"></label>
+                <input asp-for="VehicleMakeToEdit.Abrv" class="form-control" />
+                <span asp-validation-for="VehicleMakeToEdit.Abrv" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleMakeToEdit.VehicleModels" class="control-label"></label>
+                <input asp-for="VehicleMakeToEdit.VehicleModels" class="form-control" />
+                <span asp-validation-for="VehicleMakeToEdit.VehicleModels" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to Vehicle Makes List</a>
+</div>

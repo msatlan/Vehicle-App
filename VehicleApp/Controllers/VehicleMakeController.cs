@@ -58,8 +58,6 @@ namespace VehicleApp.Controllers
 
             var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
 
-            if (vehicleMake == null) return NotFound();
-
             var viewModel = new DeleteViewModel() { VehicleMakeToDelete = vehicleMake };
 
             return View(viewModel);
@@ -71,6 +69,28 @@ namespace VehicleApp.Controllers
         {
             var success = await vehicleService.DeleteVehicleMakeAsync(id);
             if (!success) return BadRequest("Could not delete Vehicle Make.");
+
+            return RedirectToAction("Index");
+        }
+
+        // Navigate to Edit page and display selected Vehicle Make
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            if (id == null) return NotFound();
+
+            var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
+
+            var viewModel = new EditViewModel() { VehicleMakeToEdit = vehicleMake };
+
+            return View(viewModel);
+        }
+
+        // Update database
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> UpdateVehicleMake(Guid id, EditViewModel viewModel) 
+        {
+            var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMakeToEdit.Name, viewModel.VehicleMakeToEdit.Abrv);
+            if (!success) return BadRequest("Could not update Vehicle Make.");
 
             return RedirectToAction("Index");
         }

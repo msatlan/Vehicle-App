@@ -12,5 +12,6 @@ namespace VehicleApp.Services
         Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake);
         Task<VehicleMake> FetchVehicleMakeAsync(Guid Id);
         Task<bool> DeleteVehicleMakeAsync(Guid Id);
+        Task<bool> UpdateVehicleMakeAsync(Guid id, string name, string abrv);
     }
 }

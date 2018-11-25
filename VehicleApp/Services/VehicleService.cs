@@ -53,5 +53,30 @@ namespace VehicleApp.Services
 
             return result == 1;
         }
+        /*
+        public async Task<bool> UpdateVehicleMakeAsync(VehicleMake vehicleMakeToEdit)
+        {
+            //var vehicleToEdit = await context.VehicleMakes.FindAsync(Id);
+
+            context.Update(vehicleMakeToEdit);
+
+            var result = await context.SaveChangesAsync();
+
+            return result == 1;
+        }
+        */
+        public async Task<bool> UpdateVehicleMakeAsync(Guid id, string name, string abrv)
+        {
+            var vehicleMake = await context.VehicleMakes.FindAsync(id);
+            vehicleMake.Name = name;
+            vehicleMake.Abrv = abrv;
+            //vehicleMake.VehicleModels = vehicleModels;
+
+            context.Update(vehicleMake);
+
+            var result = await context.SaveChangesAsync();
+
+            return result == 1;
+        }
     }
 }
