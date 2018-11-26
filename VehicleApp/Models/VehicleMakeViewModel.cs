@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace VehicleApp.Models.VehicleMakeViewModels
+namespace VehicleApp.Models
 {
-    public class EditViewModel
+    public class VehicleMakeViewModel
     {
-        public VehicleMake VehicleMakeToEdit { get; set; }
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
+
+        public VehicleMake VehicleMake { get; set; }
+        public VehicleMake[] VehicleMakes { get; set; }
+
         public VehicleModel[] VehicleModels { get; set; }
     }
 }

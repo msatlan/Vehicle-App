@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VehicleApp.Services;
-using VehicleApp.Models.VehicleMakeViewModels;
 using VehicleApp.Models;
 using System.Diagnostics;
 
@@ -24,11 +23,9 @@ namespace VehicleApp.Controllers
         // Fetch array of Vehicle Makes
         public async Task<IActionResult> Index()
         {
-            var vehicleMakes = await vehicleService.GetVehicleMakesAsync();
+            var vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
 
-            var viewModel = new IndexViewModel();
-
-            viewModel.VehicleMakes = vehicleMakes;
+            var viewModel = new VehicleMakeViewModel { VehicleMakes = vehicleMakes };
 
             return View(viewModel);
         }
@@ -56,9 +53,9 @@ namespace VehicleApp.Controllers
         {
             if (id == null) return NotFound();
 
-            var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
+            var vehicleMakeToDelete = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new DeleteViewModel() { VehicleMakeToDelete = vehicleMake };
+            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMakeToDelete };
 
             return View(viewModel);
         }
@@ -73,23 +70,35 @@ namespace VehicleApp.Controllers
             return RedirectToAction("Index");
         }
 
-        // Navigate to Edit page and display selected Vehicle Make
-        public async Task<IActionResult> Edit(Guid id)
+        // Navigate to Details page and display selected Vehicle Make
+        public async Task<IActionResult> Details(Guid id)
         {
             if (id == null) return NotFound();
 
             var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new EditViewModel() { VehicleMakeToEdit = vehicleMake };
+            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMake, Id = id };
+
+            return View(viewModel);
+        }
+
+        // Navigate to Edit page and display selected Vehicle Make
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            if (id == null) return NotFound();
+
+            var vehicleMakeToEdit = await vehicleService.FetchVehicleMakeAsync(id);
+
+            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMakeToEdit };
 
             return View(viewModel);
         }
 
         // Update database
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> UpdateVehicleMake(Guid id, EditViewModel viewModel) 
+        public async Task<IActionResult> UpdateVehicleMake(Guid id, VehicleMakeViewModel viewModel) 
         {
-            var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMakeToEdit.Name, viewModel.VehicleMakeToEdit.Abrv);
+            var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMake.Name, viewModel.VehicleMake.Abrv);
             if (!success) return BadRequest("Could not update Vehicle Make.");
 
             return RedirectToAction("Index");

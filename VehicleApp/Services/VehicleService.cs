@@ -21,7 +21,7 @@ namespace VehicleApp.Services
         }
 
         // Method implementation - Vehicle Make
-        public async Task<VehicleMake[]> GetVehicleMakesAsync()
+        public async Task<VehicleMake[]> FetchVehicleMakesAsync()
         {
             return await context.VehicleMakes.ToArrayAsync();
         }
@@ -53,18 +53,7 @@ namespace VehicleApp.Services
 
             return result == 1;
         }
-        /*
-        public async Task<bool> UpdateVehicleMakeAsync(VehicleMake vehicleMakeToEdit)
-        {
-            //var vehicleToEdit = await context.VehicleMakes.FindAsync(Id);
-
-            context.Update(vehicleMakeToEdit);
-
-            var result = await context.SaveChangesAsync();
-
-            return result == 1;
-        }
-        */
+   
         public async Task<bool> UpdateVehicleMakeAsync(Guid id, string name, string abrv)
         {
             var vehicleMake = await context.VehicleMakes.FindAsync(id);

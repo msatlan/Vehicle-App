@@ -1,4 +1,4 @@
-﻿@model VehicleApp.Models.VehicleMakeViewModels.DeleteViewModel
+﻿@model VehicleApp.Models.VehicleMakeViewModel
 
 @{ 
     ViewData["Title"] = "Delete";
@@ -14,14 +14,14 @@
     <h4>Vehicle Make</h4>
 
     <dl class="dl-horizontal">
-        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.Name)</dt>
-        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.Name)</dd>
+        <dt>@Html.DisplayNameFor(model => model.VehicleMake.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMake.Name)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.Abrv)</dt>
-        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.Abrv)</dd>
+        <dt>@Html.DisplayNameFor(model => model.VehicleMake.Abrv)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMake.Abrv)</dd>
 
-        <dt>@Html.DisplayNameFor(model => model.VehicleMakeToDelete.VehicleModels)</dt>
-        <dd>@Html.DisplayFor(model => model.VehicleMakeToDelete.VehicleModels)</dd>
+        <dt>@Html.DisplayNameFor(model => model.VehicleMake.VehicleModels)</dt>
+        <dd>@Html.DisplayFor(model => model.VehicleMake.VehicleModels)</dd>
     </dl>
 
     <form asp-action="DeleteVehicleMake">
