@@ -21,11 +21,34 @@ namespace VehicleApp.Controllers
         }
 
         // Fetch array of Vehicle Makes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            Debug.WriteLine(sortOrder);
+
+            ViewData["NameSortParameter"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["AbrvSortParameter"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+
             var vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
 
-            var viewModel = new VehicleMakeViewModel { VehicleMakes = vehicleMakes };
+            var orderedList = new List<VehicleMake>(); 
+            
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    orderedList = vehicleMakes.OrderByDescending(v => v.Name).ToList();
+                    break;
+                case "Abrv":
+                    orderedList = vehicleMakes.OrderBy(v => v.Abrv).ToList();
+                    break;
+                case "abrv_desc":
+                    orderedList = vehicleMakes.OrderByDescending(v => v.Abrv).ToList();
+                    break;
+                default:
+                    orderedList = vehicleMakes.OrderBy(v => v.Name).ToList();
+                    break;
+            }
+
+            var viewModel = new VehicleMakeViewModel { VehicleMakes = orderedList };
 
             return View(viewModel);
         }

@@ -12,7 +12,7 @@ namespace VehicleApp.Models
         public string Abrv { get; set; }
 
         public VehicleMake VehicleMake { get; set; }
-        public VehicleMake[] VehicleMakes { get; set; }
+        public List<VehicleMake> VehicleMakes { get; set; }
 
         public VehicleModel[] VehicleModels { get; set; }
     }

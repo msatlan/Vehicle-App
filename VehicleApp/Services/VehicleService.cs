@@ -21,9 +21,9 @@ namespace VehicleApp.Services
         }
 
         // Method implementation - Vehicle Make
-        public async Task<VehicleMake[]> FetchVehicleMakesAsync()
+        public async Task<List<VehicleMake>> FetchVehicleMakesAsync()
         {
-            return await context.VehicleMakes.ToArrayAsync();
+            return await context.VehicleMakes.ToListAsync();
         }
 
         public async Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake)

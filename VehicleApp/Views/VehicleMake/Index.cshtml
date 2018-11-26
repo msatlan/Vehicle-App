@@ -16,8 +16,12 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Abbreviation</th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParameter"]">@Html.DisplayNameFor(model => model.Name)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["AbrvSortParameter"]">@Html.DisplayNameFor(model => model.Abrv)</a>
+                </th>
             </tr>
         </thead>
 
