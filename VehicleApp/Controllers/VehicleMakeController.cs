@@ -21,14 +21,18 @@ namespace VehicleApp.Controllers
         }
 
         // Fetch array of Vehicle Makes
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            Debug.WriteLine(sortOrder);
-
             ViewData["NameSortParameter"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["AbrvSortParameter"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
+            ViewData["SearchParameter"] = searchString;
 
             var vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                vehicleMakes = vehicleMakes.Where(vehicle => vehicle.Name.Contains(searchString) || vehicle.Abrv.Contains(searchString));
+            }
 
             var orderedList = new List<VehicleMake>(); 
             
