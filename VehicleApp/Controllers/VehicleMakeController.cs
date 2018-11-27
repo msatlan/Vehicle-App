@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VehicleApp.Services;
 using VehicleApp.Models;
+using VehicleApp.Models.VehicleMakeViewModels;
 using System.Diagnostics;
 
 namespace VehicleApp.Controllers
@@ -19,7 +20,7 @@ namespace VehicleApp.Controllers
         {
             this.vehicleService = vehicleService;
         }
-
+        
         // Fetch array of Vehicle Makes
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
@@ -27,32 +28,17 @@ namespace VehicleApp.Controllers
             ViewData["AbrvSortParameter"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
             ViewData["SearchParameter"] = searchString;
 
-            var vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
+            var vehicleMakes = new List<VehicleMake>();
 
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                vehicleMakes = vehicleMakes.Where(vehicle => vehicle.Name.Contains(searchString) || vehicle.Abrv.Contains(searchString));
+            if (String.IsNullOrEmpty(searchString)) {
+                vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
+            } else {
+                vehicleMakes = await vehicleService.SearchVehicleMakesAsync(searchString);
             }
 
-            var orderedList = new List<VehicleMake>(); 
-            
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    orderedList = vehicleMakes.OrderByDescending(v => v.Name).ToList();
-                    break;
-                case "Abrv":
-                    orderedList = vehicleMakes.OrderBy(v => v.Abrv).ToList();
-                    break;
-                case "abrv_desc":
-                    orderedList = vehicleMakes.OrderByDescending(v => v.Abrv).ToList();
-                    break;
-                default:
-                    orderedList = vehicleMakes.OrderBy(v => v.Name).ToList();
-                    break;
-            }
-
-            var viewModel = new VehicleMakeViewModel { VehicleMakes = orderedList };
+            var viewModel = new IndexViewModel { VehicleMakes = vehicleMakes };
+                
+            viewModel.SortVehicleMakes(vehicleMakes, sortOrder);
 
             return View(viewModel);
         }
@@ -64,6 +50,7 @@ namespace VehicleApp.Controllers
         }
 
         // Add new Vehicle Make
+        
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> AddNewVehicleMake(VehicleMake newVehicleMake)
         {
@@ -82,7 +69,7 @@ namespace VehicleApp.Controllers
 
             var vehicleMakeToDelete = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMakeToDelete };
+            var viewModel = new DeleteViewModel() { VehicleMake = vehicleMakeToDelete };
 
             return View(viewModel);
         }
@@ -104,7 +91,7 @@ namespace VehicleApp.Controllers
 
             var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMake, Id = id };
+            var viewModel = new DetailsViewModel() { VehicleMake = vehicleMake, Id = id };
 
             return View(viewModel);
         }
@@ -116,14 +103,14 @@ namespace VehicleApp.Controllers
 
             var vehicleMakeToEdit = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new VehicleMakeViewModel() { VehicleMake = vehicleMakeToEdit };
+            var viewModel = new EditViewModel() { VehicleMake = vehicleMakeToEdit };
 
             return View(viewModel);
         }
 
         // Update database
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> UpdateVehicleMake(Guid id, VehicleMakeViewModel viewModel) 
+        public async Task<IActionResult> UpdateVehicleMake(Guid id, EditViewModel viewModel) 
         {
             var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMake.Name, viewModel.VehicleMake.Abrv);
             if (!success) return BadRequest("Could not update Vehicle Make.");

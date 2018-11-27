@@ -1,4 +1,4 @@
-﻿@model VehicleApp.Models.VehicleMakeViewModel
+﻿@model VehicleApp.Models.VehicleMakeViewModels.IndexViewModel
 
 @{ 
     ViewData["Title"] = "Manage Vehicle Makes";
@@ -13,7 +13,7 @@
 <form asp-action="Index" method="get">
     <div class="form-actions">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["SearchParameter"]"/>
+            Find by name or abbreviation: <input type="text" name="SearchString" value="@ViewData["SearchParameter"]"/>
             <input type="submit" value="Search" class="btn btn-default"/> |
             <a asp-action="Index">Back to vehicle list</a>
         </p>
@@ -34,7 +34,6 @@
                 </th>
             </tr>
         </thead>
-
 
         @foreach (var vehicleMake in Model.VehicleMakes)
         {

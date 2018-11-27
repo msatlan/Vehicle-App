@@ -8,7 +8,9 @@ namespace VehicleApp.Services
 {
     public interface IVehicleService
     {
-        Task<IEnumerable <VehicleMake>> FetchVehicleMakesAsync();
+        Task<List<VehicleMake>> FetchVehicleMakesAsync();
+        Task<List<VehicleMake>> SearchVehicleMakesAsync(string searchString);
+
         Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake);
         Task<VehicleMake> FetchVehicleMakeAsync(Guid id);
         Task<bool> DeleteVehicleMakeAsync(Guid id);

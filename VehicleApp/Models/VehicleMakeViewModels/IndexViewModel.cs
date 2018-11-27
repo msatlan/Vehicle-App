@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace VehicleApp.Models
+namespace VehicleApp.Models.VehicleMakeViewModels
 {
-    public class VehicleMakeViewModel
+    public class IndexViewModel
     {
         // Properties
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
-
-        public VehicleMake VehicleMake { get; set; }
         public List<VehicleMake> VehicleMakes { get; set; }
-
-        public VehicleModel[] VehicleModels { get; set; }
 
         // Methods
         public void SortVehicleMakes(IEnumerable<VehicleMake> vehicleMakes, string sortOrder)
@@ -39,18 +34,6 @@ namespace VehicleApp.Models
             }
 
             this.VehicleMakes = sortedList;
-        }
-
-        public void ApplySearchString(IEnumerable<VehicleMake> vehicleMakes, string searchString)
-        {
-            var foundVehicleMakes = new List<VehicleMake>();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                foundVehicleMakes = vehicleMakes.Where(vehicle => vehicle.Name.Contains(searchString) || vehicle.Abrv.Contains(searchString)).ToList();
-
-                this.VehicleMakes = foundVehicleMakes;
-            }
         }
     }
 }

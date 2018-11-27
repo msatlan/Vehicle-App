@@ -21,10 +21,23 @@ namespace VehicleApp.Services
         }
 
         // Method implementation - Vehicle Make
-        public async Task<IEnumerable<VehicleMake>> FetchVehicleMakesAsync()
+        public async Task<List<VehicleMake>> FetchVehicleMakesAsync()
         {
             return await context.VehicleMakes.ToListAsync();
         }
+
+        public async Task<List<VehicleMake>> SearchVehicleMakesAsync(string searchString)
+        {
+            var vehicleMakes = from vehicle in context.VehicleMakes
+                               select vehicle;
+
+            
+                vehicleMakes = vehicleMakes.Where(vehicle => vehicle.Name.Contains(searchString) || vehicle.Abrv.Contains(searchString));
+            
+
+            return await vehicleMakes.AsNoTracking().ToListAsync();
+        }
+
 
         public async Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake)
         {
@@ -67,5 +80,7 @@ namespace VehicleApp.Services
 
             return result == 1;
         }
+
+        
     }
 }
