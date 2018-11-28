@@ -1,6 +1,6 @@
 ﻿@model VehicleApp.Models.VehicleMakeViewModels.EditViewModel
 
-@{ 
+@{
     ViewData["Title"] = "Edit";
 }
 
@@ -35,3 +35,7 @@
 <div>
     <a asp-action="Index">Back to Vehicle Makes List</a>
 </div>
+
+@section scripts{
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

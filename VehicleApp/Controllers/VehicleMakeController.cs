@@ -21,7 +21,7 @@ namespace VehicleApp.Controllers
             this.vehicleService = vehicleService;
         }
         
-        // Fetch array of Vehicle Makes
+        // Fetch list of Vehicle Makes
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParameter"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -36,9 +36,9 @@ namespace VehicleApp.Controllers
                 vehicleMakes = await vehicleService.SearchVehicleMakesAsync(searchString);
             }
 
-            var viewModel = new IndexViewModel { VehicleMakes = vehicleMakes };
-                
-            viewModel.SortVehicleMakes(vehicleMakes, sortOrder);
+            var viewModel = new IndexViewModel();
+
+            viewModel.VehicleMakes = viewModel.SortVehicleMakes(vehicleMakes, sortOrder);
 
             return View(viewModel);
         }
@@ -49,12 +49,15 @@ namespace VehicleApp.Controllers
             return View();
         }
 
-        // Add new Vehicle Make
-        
+        // Add new Vehicle Make       
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> AddNewVehicleMake(VehicleMake newVehicleMake)
+        public async Task<IActionResult> AddNewVehicleMake( VehicleMake newVehicleMake)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Index");
+            if (!ModelState.IsValid)
+            {
+                Debug.WriteLine("--------------------> ModelState invalid!!!!");
+                return RedirectToAction("Create");
+            }
 
             var success = await vehicleService.AddNewVehicleMakeAsync(newVehicleMake);
             if (!success) return BadRequest("Could not add new vehicle make");
@@ -112,6 +115,12 @@ namespace VehicleApp.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> UpdateVehicleMake(Guid id, EditViewModel viewModel) 
         {
+            if (!ModelState.IsValid)
+            {
+                Debug.WriteLine("--------------------> ModelState invalid!!!!");
+                return RedirectToAction("Edit");
+            }
+
             var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMake.Name, viewModel.VehicleMake.Abrv);
             if (!success) return BadRequest("Could not update Vehicle Make.");
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace VehicleApp.Models
 {
@@ -14,6 +15,7 @@ namespace VehicleApp.Models
         public string Name { get; set; }
 
         [StringLength(10)]
+        [Display(Name = "Abbreviation")]
         public string Abrv { get; set; }
 
         // Navigation property
