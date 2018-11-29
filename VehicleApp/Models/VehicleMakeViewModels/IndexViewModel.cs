@@ -1,40 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using VehicleApp.Models;
 
 namespace VehicleApp.Models.VehicleMakeViewModels
 {
-    public class IndexViewModel
+    public class IndexViewModel<T> : List<T>
     {
-        // Properties
-        public string Name { get; set; }
-        public string Abrv { get; set; }
+        public int PageIndex { get; set; }
+        public int NumberOfPages { get; set; }
 
-        public List<VehicleMake> VehicleMakes { get; set; }
-
-        // Methods
-        public List<VehicleMake> SortVehicleMakes(List<VehicleMake> vehicleMakes, string sortOrder)
+        public bool HasPreviousPage
         {
-            switch (sortOrder)
+            get
             {
-                case "name_desc":
-                    vehicleMakes = vehicleMakes.OrderByDescending(v => v.Name).ToList();
-                    break;
-                case "Abrv":
-                    vehicleMakes = vehicleMakes.OrderBy(v => v.Abrv).ToList();
-                    break;
-                case "abrv_desc":
-                    vehicleMakes = vehicleMakes.OrderByDescending(v => v.Abrv).ToList();
-                    break;
-                default:
-                    vehicleMakes = vehicleMakes.OrderBy(v => v.Name).ToList();
-                    break;
+                return (PageIndex > 1);
             }
+        }
 
-            return vehicleMakes;
+        public bool HasNextPage
+        {
+            get
+            {
+                return (PageIndex < NumberOfPages);
+            }
+        }
+
+        // Constructor
+        public IndexViewModel(List<T> items, int count, int pageIndex, int pageSize)
+        {
+            PageIndex = pageIndex;
+            NumberOfPages = (int)Math.Ceiling(count / (double)pageSize);
+
+            this.AddRange(items);
+        }
+
+        // Used for creating the PagedList - constructors can't run asynchronous code
+        public static async Task<IndexViewModel<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
+        {
+            var count = await source.CountAsync();
+            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new IndexViewModel<T>(items, count, pageIndex, pageSize);
         }
     }
 }

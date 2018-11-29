@@ -22,25 +22,23 @@ namespace VehicleApp.Controllers
         }
         
         // Fetch list of Vehicle Makes
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             ViewData["NameSortParameter"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["AbrvSortParameter"] = sortOrder == "Abrv" ? "abrv_desc" : "Abrv";
-            ViewData["SearchParameter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
 
-            var vehicleMakes = new List<VehicleMake>();
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            } 
 
-            if (String.IsNullOrEmpty(searchString)) {
-                vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
-            } else {
-                vehicleMakes = await vehicleService.SearchVehicleMakesAsync(searchString);
-            }
+            ViewData["CurrentFilter"] = searchString;
 
-            var viewModel = new IndexViewModel();
+            var pageSize = 4;
+            var vehicleMakesPaged = await vehicleService.FetchPagedVehicleMakes(sortOrder, searchString, page ?? 1, pageSize);
 
-            viewModel.VehicleMakes = viewModel.SortVehicleMakes(vehicleMakes, sortOrder);
-
-            return View(viewModel);
+            return View(vehicleMakesPaged);
         }
 
         // Navigate to Create page
