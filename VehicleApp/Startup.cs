@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VehicleApp.Data;
 using Microsoft.EntityFrameworkCore;
 using VehicleApp.Services;
+using AutoMapper;
 
 namespace VehicleApp
 {
@@ -35,11 +36,24 @@ namespace VehicleApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            
+            //services.AddAutoMapper();
+
+            services.AddSingleton(mapper);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<VehicleDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleDb10")));
 
-            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<IVehicleService, VehicleService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

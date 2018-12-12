@@ -9,10 +9,10 @@ namespace VehicleApp.Services
     public interface IVehicleService
     {
         Task<List<VehicleMake>> FetchVehicleMakesAsync();
-        Task<List<VehicleMake>> FetchPagedVehicleMakes(string sortOrder, string searchString, int pageIndex, int pageSize);
+        //Task<List<VehicleMake>> FetchPagedVehicleMakes(string sortOrder, string searchString, int pageIndex, int pageSize);
         Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake);
         Task<VehicleMake> FetchVehicleMakeAsync(Guid id);
         Task<bool> DeleteVehicleMakeAsync(Guid id);
-        Task<bool> UpdateVehicleMakeAsync(Guid id, string name, string abrv);
+        Task<bool> UpdateVehicleMakeAsync(VehicleMake vehicleMake);
     }
 }

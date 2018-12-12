@@ -7,6 +7,7 @@ using VehicleApp.Services;
 using VehicleApp.Models;
 using VehicleApp.Models.VehicleMakeViewModels;
 using System.Diagnostics;
+using AutoMapper;
 
 namespace VehicleApp.Controllers
 {
@@ -14,14 +15,26 @@ namespace VehicleApp.Controllers
     {
         // Properties
         private readonly IVehicleService vehicleService;
+        private readonly IMapper mapper;
 
         // Constructor
-        public VehicleMakeController(IVehicleService vehicleService)
+        public VehicleMakeController(IVehicleService vehicleService, IMapper mapper)
         {
             this.vehicleService = vehicleService;
+            this.mapper = mapper;
         }
         
         // Fetch list of Vehicle Makes
+        public async Task<IActionResult> Index()
+        {
+            var vehicleMakes = await vehicleService.FetchVehicleMakesAsync();
+
+            IndexViewModel viewModel = new IndexViewModel() { VehicleMakes = mapper.Map<List<VehicleMake>>(vehicleMakes) };
+
+            return View(viewModel);
+        }
+
+        /*
         public async Task<IActionResult> Index(string sortOrder, string searchString, string currentFilter, int? page)
         {
             ViewData["NameSortParameter"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -36,10 +49,11 @@ namespace VehicleApp.Controllers
             ViewData["CurrentFilter"] = searchString;
 
             var pageSize = 4;
-            var vehicleMakesPaged = await vehicleService.FetchPagedVehicleMakes(sortOrder, searchString, page ?? 1, pageSize);
+            var viewModel = await vehicleService.FetchPagedVehicleMakes(sortOrder, searchString, page ?? 1, pageSize);
 
-            return View(vehicleMakesPaged);
+            return View(viewModel);
         }
+        */
 
         // Navigate to Create page
         public IActionResult Create()
@@ -49,15 +63,19 @@ namespace VehicleApp.Controllers
 
         // Add new Vehicle Make       
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> AddNewVehicleMake( VehicleMake newVehicleMake)
+        public async Task<IActionResult> AddNewVehicleMake()
         {
+            CreateViewModel viewModel = new CreateViewModel() { Id = Guid.NewGuid(), Name = "VMAKE", Abrv = "33" };
+
+            VehicleMake vehicleMakeToAdd = mapper.Map<VehicleMake>(viewModel);
+
             if (!ModelState.IsValid)
             {
-                Debug.WriteLine("--------------------> ModelState invalid!!!!");
+                Debug.WriteLine("--------------------> ModelState invalid!");
                 return RedirectToAction("Create");
             }
 
-            var success = await vehicleService.AddNewVehicleMakeAsync(newVehicleMake);
+            var success = await vehicleService.AddNewVehicleMakeAsync(vehicleMakeToAdd);
             if (!success) return BadRequest("Could not add new vehicle make");
 
             return RedirectToAction("Index");
@@ -68,18 +86,10 @@ namespace VehicleApp.Controllers
         {
             if (id == null) return NotFound();
 
-            var vehicleMakeToDelete = await vehicleService.FetchVehicleMakeAsync(id);
+            DeleteViewModel viewModel = mapper.Map<DeleteViewModel>(await vehicleService.FetchVehicleMakeAsync(id));
 
-            var viewModel = new DeleteViewModel() { VehicleMake = vehicleMakeToDelete };
+            var success = await vehicleService.DeleteVehicleMakeAsync(viewModel.Id);
 
-            return View(viewModel);
-        }
-
-        // Delete selected Vehicle Make
-        [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> DeleteVehicleMake(Guid id)
-        {
-            var success = await vehicleService.DeleteVehicleMakeAsync(id);
             if (!success) return BadRequest("Could not delete Vehicle Make.");
 
             return RedirectToAction("Index");
@@ -90,9 +100,7 @@ namespace VehicleApp.Controllers
         {
             if (id == null) return NotFound();
 
-            var vehicleMake = await vehicleService.FetchVehicleMakeAsync(id);
-
-            var viewModel = new DetailsViewModel() { VehicleMake = vehicleMake, Id = id };
+            DetailsViewModel viewModel = mapper.Map<DetailsViewModel>(await vehicleService.FetchVehicleMakeAsync(id));
 
             return View(viewModel);
         }
@@ -104,7 +112,7 @@ namespace VehicleApp.Controllers
 
             var vehicleMakeToEdit = await vehicleService.FetchVehicleMakeAsync(id);
 
-            var viewModel = new EditViewModel() { VehicleMake = vehicleMakeToEdit };
+            EditViewModel viewModel = mapper.Map<EditViewModel>(vehicleMakeToEdit);
 
             return View(viewModel);
         }
@@ -119,7 +127,9 @@ namespace VehicleApp.Controllers
                 return RedirectToAction("Edit");
             }
 
-            var success = await vehicleService.UpdateVehicleMakeAsync(id, viewModel.VehicleMake.Name, viewModel.VehicleMake.Abrv);
+            VehicleMake vehicleMakeToEdit = mapper.Map<VehicleMake>(viewModel);
+
+            var success = await vehicleService.UpdateVehicleMakeAsync(vehicleMakeToEdit);
             if (!success) return BadRequest("Could not update Vehicle Make.");
 
             return RedirectToAction("Index");

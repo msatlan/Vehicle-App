@@ -8,11 +8,13 @@ namespace VehicleApp.Models.VehicleMakeViewModels
 {
     public class CreateViewModel
     {
+        public Guid Id { get; set; }
+
         [Required, StringLength(20)]
         public string Name { get; set; }
 
         [StringLength(10)]
         [Display(Name = "Abbreviation")]
-        public string Abrv { get; set; }
+        public string Abrv { get; set; } 
     }
 }

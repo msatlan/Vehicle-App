@@ -11,19 +11,19 @@
         <form asp-action="UpdateVehicleMake" asp-controller="VehicleMake">
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="VehicleMake.Name" class="control-label"></label>
-                <input asp-for="VehicleMake.Name" class="form-control" />
-                <span asp-validation-for="VehicleMake.Name" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VehicleMake.Abrv" class="control-label"></label>
-                <input asp-for="VehicleMake.Abrv" class="form-control" />
-                <span asp-validation-for="VehicleMake.Abrv" class="text-danger"></span>
+                <label asp-for="Abrv" class="control-label"></label>
+                <input asp-for="Abrv" class="form-control" />
+                <span asp-validation-for="Abrv" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VehicleMake.VehicleModels" class="control-label"></label>
-                <input asp-for="VehicleMake.VehicleModels" class="form-control" />
-                <span asp-validation-for="VehicleMake.VehicleModels" class="text-danger"></span>
+                <label asp-for="VehicleModels" class="control-label"></label>
+                <input asp-for="VehicleModels" class="form-control" />
+                <span asp-validation-for="VehicleModels" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

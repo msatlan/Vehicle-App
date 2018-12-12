@@ -9,7 +9,7 @@ namespace VehicleApp.Models
 {
     public class VehicleModel
     {
-        public Guid VehicleModelId { get; set; }
+        public Guid Id { get; set; }
 
         [Required, StringLength(20)]
         public string Name { get; set; }

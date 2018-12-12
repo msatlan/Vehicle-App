@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using VehicleApp.Models.VehicleMakeViewModels;
 
+
 namespace VehicleApp.Services
 {
     public class VehicleService : IVehicleService
@@ -27,6 +28,7 @@ namespace VehicleApp.Services
             return await context.VehicleMakes.ToListAsync();
         }
 
+        /*
         public async Task<List<VehicleMake>> FetchPagedVehicleMakes(string sortOrder, string searchString, int pageIndex, int pageSize)
         {
             var vehicleMakes = from vehicle in context.VehicleMakes
@@ -54,11 +56,10 @@ namespace VehicleApp.Services
             }
 
             return await IndexViewModel<VehicleMake>.CreateAsync(vehicleMakes.AsNoTracking(), pageIndex, pageSize);
-        }
+        }*/
 
         public async Task<bool> AddNewVehicleMakeAsync(VehicleMake newVehicleMake)
         {
-            newVehicleMake.VehicleMakeId = Guid.NewGuid();
             context.VehicleMakes.Add(newVehicleMake);
 
             var result = await context.SaveChangesAsync();
@@ -66,16 +67,20 @@ namespace VehicleApp.Services
             return result == 1;
         }
 
-        public async Task<VehicleMake> FetchVehicleMakeAsync(Guid Id)
+        public async Task<VehicleMake> FetchVehicleMakeAsync(Guid id)
         {
-            var vehicleMake = await context.VehicleMakes.FirstOrDefaultAsync(vMake => vMake.VehicleMakeId == Id);
+            var vehicleMake = await context.VehicleMakes.FindAsync(id);
 
             return vehicleMake;
         }
 
-        public async Task<bool> DeleteVehicleMakeAsync(Guid Id)
+        public async Task<bool> DeleteVehicleMakeAsync(Guid id)
         {
-            var vehicleMakeToDelete = await context.VehicleMakes.FindAsync(Id);
+            //VehicleMake vehicleMakeToDelete = await context.VehicleMakes.FindAsync(id);
+            
+            VehicleMake vehicleMakeToDelete = context.VehicleMakes
+                                               .Where(vehicleMake => vehicleMake.Id == id )
+                                               .FirstOrDefault<VehicleMake>();
 
             context.Remove(vehicleMakeToDelete);
 
@@ -83,21 +88,14 @@ namespace VehicleApp.Services
 
             return result == 1;
         }
-   
-        public async Task<bool> UpdateVehicleMakeAsync(Guid id, string name, string abrv)
-        {
-            var vehicleMake = await context.VehicleMakes.FindAsync(id);
-            vehicleMake.Name = name;
-            vehicleMake.Abrv = abrv;
-            //vehicleMake.VehicleModels = vehicleModels;
 
+        public async Task<bool> UpdateVehicleMakeAsync(VehicleMake vehicleMake)
+        {
             context.Update(vehicleMake);
 
             var result = await context.SaveChangesAsync();
 
             return result == 1;
         }
-
-        
     }
 }
